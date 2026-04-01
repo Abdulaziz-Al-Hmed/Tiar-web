@@ -162,3 +162,36 @@ sections.forEach(section => {
 
 // Set auto year in footer
 document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// قراءة مسار الأيقونة بشكل ديناميكي (Favicon)
+const logoImg = document.querySelector('.logo-img');
+if (logoImg) {
+    let favicon = document.querySelector('link[rel="icon"]');
+    if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+    }
+    favicon.href = logoImg.getAttribute('src');
+}
+
+// تمرير سلس (Smooth Scroll) ومنع ظهور #home وغيرها في الرابط
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault(); // يمنع تغيير الرابط الأساسي
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            const headerOffset = 80;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        }
+    });
+});
